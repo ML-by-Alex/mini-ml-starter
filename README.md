@@ -1,19 +1,22 @@
 # mini-ml-starter (PyTorch & TensorFlow)
 
-Небольшой учебный проект: одна задача (классификация одежды из Fashion‑MNIST), две реализации — PyTorch и TensorFlow/Keras.
-Цель — дать аккуратную базу, с которой можно быстро стартовать и сравнить фреймворки без лишней магии.
+Tiny, no-nonsense starter for image classification on **Fashion-MNIST** with **two side-by-side implementations**: **PyTorch** and **TensorFlow/Keras**. A clean baseline you can run, read, and extend — no extra tooling required.
 
-## Особенности
-- Две одинаковые по идее реализации (простая CNN): `pytorch/` и `tensorflow/`.
-- Готовые скрипты обучения и инференса, минимальные тесты на форму выхода.
-- Makefile, Dockerfile и GitHub Actions (CI) уже настроены.
-- Код без внешних зависимостей, кроме стандартных библиотек фреймворков.
+## Highlights
+- ✅ Same simple CNN in both frameworks (`pytorch/` and `tensorflow/`)
+- ✅ Ready-to-run training & inference scripts
+- ✅ Lightweight tests with `pytest` (fast shape checks)
+- ✅ Makefile & Docker for repeatable runs
+- ✅ GitHub Actions CI out of the box
+- ✅ No extra deps beyond the frameworks
 
-## Быстрый старт
+---
+
+## Quickstart
 
 ### PyTorch
 ```bash
-python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts ctivate
 pip install -r requirements-pytorch.txt
 python pytorch/train.py --epochs 3
 python pytorch/infer.py --checkpoint outputs/pytorch/best.pt
@@ -21,13 +24,13 @@ python pytorch/infer.py --checkpoint outputs/pytorch/best.pt
 
 ### TensorFlow
 ```bash
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts ctivate
 pip install -r requirements-tf.txt
 python tensorflow/train.py --epochs 3
 python tensorflow/infer.py --checkpoint outputs/tensorflow/best.keras
 ```
 
-### Удобные цели Makefile
+### Makefile shortcuts
 ```bash
 make setup-pytorch && make train-pytorch && make test-pytorch
 make setup-tf && make train-tf && make test-tf
@@ -44,7 +47,9 @@ docker build -t mini-ml-tf --build-arg FRAMEWORK=tensorflow .
 docker run --rm -it -v $PWD:/app mini-ml-tf bash -lc "python tensorflow/train.py"
 ```
 
-## Структура
+---
+
+## Project layout
 ```
 mini-ml-starter/
 ├─ README.md
@@ -54,35 +59,41 @@ mini-ml-starter/
 ├─ requirements-pytorch.txt
 ├─ requirements-tf.txt
 ├─ Dockerfile
-├─ .github/
-│  └─ workflows/
-│     └─ ci.yml
+├─ .github/workflows/ci.yml
 ├─ pytorch/
 │  ├─ data.py
 │  ├─ model.py
 │  ├─ train.py
 │  ├─ infer.py
-│  └─ tests/
-│     └─ test_model.py
+│  └─ tests/test_model.py
 └─ tensorflow/
    ├─ data.py
    ├─ model.py
    ├─ train.py
    ├─ infer.py
-   └─ tests/
-      └─ test_model.py
+   └─ tests/test_model.py
 ```
 
-## Репродуцируемость
-В PyTorch фиксируется seed; в Keras поведение по умолчанию достаточно стабильное для учебной задачи.
+## Tests
+Run the tiny sanity test that checks output shapes:
+```bash
+cd pytorch && pytest -q    # or: cd tensorflow && pytest -q
+```
 
-## Тесты
-В обеих реализациях есть быстрый тест на форму выхода сети — это помогает ловить очевидные ошибки без долгих прогона и скачивания датасетов.
+## Notes
+- Datasets download automatically to `./data` on first run.
+- Checkpoints are saved to `./outputs/<framework>/`.
+- GPU is optional; CPU works fine for this tutorial.
 
-## Частые вопросы
-**Почему Fashion‑MNIST?** Небольшой датасет, скачивается автоматически, позволяет быстро увидеть прогресс.
-**Можно ли подключить свой датасет?** Да: самый простой путь — подготовить папку с изображениями и написать свой загрузчик.
-**Нужна ли GPU?** Нет. На CPU проект обучается, пусть и медленнее.
+## Troubleshooting
+- CI fails on TensorFlow install? Replace `tensorflow>=2.15` with `tensorflow-cpu>=2.15` in `requirements-tf.txt` and commit again.
 
-## Лицензия
-MIT. См. файл `LICENSE`.
+## Extend this starter
+- Add augmentations (e.g., random crop/flip)
+- Introduce a proper train/val/test split
+- Swap Fashion-MNIST for your own images dataset
+- Add logging (TensorBoard or W&B) and config via YAML
+
+## License
+MIT — see `LICENSE`.
+
